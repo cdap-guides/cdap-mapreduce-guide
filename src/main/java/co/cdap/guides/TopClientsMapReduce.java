@@ -72,7 +72,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
   }
 
   /**
-   * Mapper that reads the Apache access log events and emits the IP and count.
+   * Mapper that reads the Apache access log events and emits the IP as Key and count as Value.
    */
   public static class IPMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
     private static final IntWritable OUTPUT_VALUE = new IntWritable(1);
@@ -103,10 +103,11 @@ public class TopClientsMapReduce extends AbstractMapReduce {
       for (IntWritable data : values) {
         count += data.get();
       }
+
       // Store the Key and Value in a priority queue.
       priorityQueue.add(new ClientCount(key.toString(), count));
 
-      // Ensure the priority queue is bounded.
+      // Ensure the priority queue is always contains topN count.
       if (priorityQueue.size() > COUNT) {
         priorityQueue.poll();
       }

@@ -26,12 +26,12 @@ import com.google.inject.util.Types;
 
 
 /**
- * LogAnalyticsApp to that consumes Apache access log event, computes topN clientIps by traffic and a service
+ * LogAnalyticsApp that consumes Apache access log event, computes topN clientIps by traffic and a service
  * to retrieve the results.
  */
 public class LogAnalyticsApp extends AbstractApplication {
 
-  public static final String DATASET_NAME = "topN";
+  public static final String DATASET_NAME = "resultStore";
   public static final byte [] DATASET_RESULTS_KEY = {'r'};
 
   @Override
