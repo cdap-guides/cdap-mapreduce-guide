@@ -46,7 +46,7 @@ public class LogAnalyticsAppTest extends TestBase {
     // Deploy the HelloWorld application
     ApplicationManager appManager = deployApplication(LogAnalyticsApp.class);
 
-    // Send stream events to the "logEvent" Stream
+    // Send stream events to the logEvent Stream
     StreamWriter streamWriter = appManager.getStreamWriter("logEvent");
     streamWriter.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cdap.html HTTP/1.0\" 200 299 \" \" " +
                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
