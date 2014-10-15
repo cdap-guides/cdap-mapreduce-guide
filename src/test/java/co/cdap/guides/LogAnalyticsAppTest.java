@@ -90,7 +90,6 @@ public class LogAnalyticsAppTest extends TestBase {
     appManager.stopAll();
   }
 
-
   private void serviceStatusCheck(ServiceManager serviceManger, boolean running) throws InterruptedException {
     int trial = 0;
     while (trial++ < 5) {
@@ -101,6 +100,4 @@ public class LogAnalyticsAppTest extends TestBase {
     }
     throw new IllegalStateException("Service state not executed. Expected " + running);
   }
-
-
 }

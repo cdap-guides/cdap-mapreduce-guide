@@ -50,4 +50,3 @@ public class LogAnalyticsApp extends AbstractApplication {
     }
   }
 }
-
