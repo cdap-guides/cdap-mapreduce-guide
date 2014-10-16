@@ -294,6 +294,11 @@ Example output::
 You have now learnt how to write MapReduce job to process events from a stream, write results to a DataSet and query
 the results using services.
 
+Related Topics
+--------------
+
+* `Wise: Web Analytics <http://docs.cask.co/tutorial/current/en/tutorial2.html>`_ tutorial
+
 Extend This Example
 -------------------
 Now that you have the basics of MapReduce programs down, you can extend this example by:
@@ -302,7 +307,7 @@ Now that you have the basics of MapReduce programs down, you can extend this exa
 * Store the results in a Timeseries data to analyze trends
 
 Share and Discuss
----------------
+-----------------
 
 Have a question? Discuss at `CDAP User Mailing List <https://groups.google.com/forum/#!forum/cdap-user>`_
 
