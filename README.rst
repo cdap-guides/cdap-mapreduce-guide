@@ -287,7 +287,7 @@ We can now start the TopClients service and query the processing results::
 
   cdap-cli.sh start service LogAnalyticsApp.TopClientsService
 
-  curl http://localhost:10000/v2/apps/LogAnalytics/services/TopClientsService/methods/results && echo
+  curl http://localhost:10000/v2/apps/LogAnalyticsApp/services/TopClientsService/methods/results && echo
 
 Example output::
 
