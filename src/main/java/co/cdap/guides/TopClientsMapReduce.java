@@ -36,7 +36,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
     return MapReduceSpecification.Builder.with()
       .setName("TopClientsMapReduce")
       .setDescription("MapReduce job that computes top 10 clients in the last 1 hour")
-      .useOutputDataSet(LogAnalyticsApp.DATASET_NAME)
+      .useOutputDataSet(LogAnalyticsApp.RESULTS_DATASET_NAME)
       .build();
   }
 

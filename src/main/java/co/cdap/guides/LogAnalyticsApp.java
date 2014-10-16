@@ -31,20 +31,18 @@ import com.google.inject.util.Types;
  */
 public class LogAnalyticsApp extends AbstractApplication {
 
-  public static final String DATASET_NAME = "resultStore";
-  public static final byte [] DATASET_RESULTS_KEY = {'r'};
+  public static final String RESULTS_DATASET_NAME = "resultStore";
 
   @Override
   public void configure() {
     setName("LogAnalyticsApp");
-    setDescription("An application that computes top 10 clientIPs from Apache access log data");
-    addStream(new Stream("logEvent"));
+    addStream(new Stream("logEvents"));
     addMapReduce(new TopClientsMapReduce());
     addService(new TopClientsService());
     try {
       DatasetProperties props = ObjectStores.objectStoreProperties(Types.listOf(ClientCount.class),
                                                                    DatasetProperties.EMPTY);
-      createDataset(DATASET_NAME, ObjectStore.class, props);
+      createDataset(RESULTS_DATASET_NAME, ObjectStore.class, props);
     } catch (UnsupportedTypeException e) {
       throw Throwables.propagate(e);
     }

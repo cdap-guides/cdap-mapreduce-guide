@@ -32,6 +32,8 @@ import javax.ws.rs.Path;
  */
 public class TopClientsService extends AbstractService {
 
+  public static final byte [] DATASET_RESULTS_KEY = {'r'};
+
   @Override
   protected void configure() {
     setName("TopClientsService");
@@ -40,14 +42,14 @@ public class TopClientsService extends AbstractService {
 
   public static class ResultsHandler extends AbstractHttpServiceHandler {
 
-    @UseDataSet(LogAnalyticsApp.DATASET_NAME)
+    @UseDataSet(LogAnalyticsApp.RESULTS_DATASET_NAME)
     private ObjectStore<List<ClientCount>> topN;
 
     @GET
     @Path("/results")
     public void getResults(HttpServiceRequest request, HttpServiceResponder responder) {
 
-      List<ClientCount> result = topN.read(LogAnalyticsApp.DATASET_RESULTS_KEY);
+      List<ClientCount> result = topN.read(DATASET_RESULTS_KEY);
       if (result == null) {
         responder.sendError(404, "Result not found");
       } else {

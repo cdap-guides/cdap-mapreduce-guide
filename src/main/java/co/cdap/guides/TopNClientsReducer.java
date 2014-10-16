@@ -43,6 +43,6 @@ public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<
     while (priorityQueue.size() != 0) {
       topNResults.add(priorityQueue.poll());
     }
-    context.write(LogAnalyticsApp.DATASET_RESULTS_KEY, topNResults);
+    context.write(TopClientsService.DATASET_RESULTS_KEY, topNResults);
   }
 }
