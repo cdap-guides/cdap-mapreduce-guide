@@ -206,7 +206,7 @@ the result to the output Dataset which is configured in the ``configure()`` meth
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
       // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used
-      //  as output the entries will be written to the Dataset without any additional effort.
+      // as output the entries will be written to the Dataset without any additional effort.
       List<ClientCount> topNResults = Lists.newArrayList();
       while (priorityQueue.size() != 0) {
         topNResults.add(priorityQueue.poll());
@@ -255,7 +255,7 @@ The ``TopClientsService`` defines a simple HTTP REST endpoint to perform this qu
 Build and Run
 -------------
 
-The LogAnalyticsApp can be built and packaged using the Apache maven command:
+The LogAnalyticsApp can be built and packaged using the Apache maven command::
 
   mvn clean package
 
