@@ -43,13 +43,13 @@ public class TopClientsService extends AbstractService {
   public static class ResultsHandler extends AbstractHttpServiceHandler {
 
     @UseDataSet(LogAnalyticsApp.RESULTS_DATASET_NAME)
-    private ObjectStore<List<ClientCount>> topN;
+    private ObjectStore<List<ClientCount>> topClients;
 
     @GET
     @Path("/results")
     public void getResults(HttpServiceRequest request, HttpServiceResponder responder) {
 
-      List<ClientCount> result = topN.read(DATASET_RESULTS_KEY);
+      List<ClientCount> result = topClients.read(DATASET_RESULTS_KEY);
       if (result == null) {
         responder.sendError(404, "Result not found");
       } else {
