@@ -179,7 +179,7 @@ the result to output Dataset which is configured in the configure() method of th
 
 .. code:: java
 
-    public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<ClientCount>> {
+  public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<ClientCount>> {
 
     private static final int COUNT = 10;
     private static final PriorityQueue<ClientCount> priorityQueue = new PriorityQueue<ClientCount>(COUNT);
