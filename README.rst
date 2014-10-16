@@ -293,7 +293,7 @@ Example output::
 
   [{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
 
-You have now learnt how to write a MapReduce job to process events from a stream, write the results to a DataSet and query
+You have now learnt how to write a MapReduce job to process events from a stream, write the results to a Dataset and query
 the results using services.
 
 Related Topics
