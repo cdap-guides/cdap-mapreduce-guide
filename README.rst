@@ -2,7 +2,7 @@ Batch Data Processing With CDAP
 ===============================
 
 `MapReduce <http://research.google.com/archive/mapreduce.html>`_ is the most popular paradigm for processing large
-amounts of data in a reliable and fault-tolerant manner.In this guide you will learn how to batch process data using
+amounts of data in a reliable and fault-tolerant manner. In this guide you will learn how to batch process data using
 MapReduce in the `Cask Data Application Platform (CDAP). <http://cdap.io>`_
 
 What You Will Build
@@ -107,13 +107,13 @@ Let's take a closer look at the MapReduce program.
 
 The TopClientsMapReduce job extends an 
 `AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`_
-class and overrides the configure() and beforeSubmit().
+class and overrides the ``configure()`` and ``beforeSubmit()`` methods.
 
-* configure() method configures a MapReduce job, by returning an instance of
+* ``configure()`` method configures a MapReduce job, by returning an instance of
 `MapReduceSpecification <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/MapReduceSpecification.html>`_. The MapReduce
 job name, description and output Dataset are configured in the example.
 
-* beforeSubmit() method is invoked at runtime, before the MapReduce job is executed. Here, you will have access to the
+* ``beforeSubmit()`` method is invoked at runtime, before the MapReduce job is executed. Here, you will have access to the
 Hadoop job configuration through the MapReduceContext. Mapper and Reducer classes as well as the intermediate data
 format are set in this method.
 
