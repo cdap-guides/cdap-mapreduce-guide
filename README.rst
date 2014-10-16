@@ -66,28 +66,28 @@ The CDAP application is identified by LogAnalyticsApp class. This class extends 
 `AbstractApplication <http://docs.cdap.io/cdap/2.5.0/en/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`_,
 and overrides the configure() method in order to define all of the application components:
 
-.. code:: java
+.. code-bock:: java
 
-public class LogAnalyticsApp extends AbstractApplication {
-
-  public static final String DATASET_NAME = "resultStore";
-  public static final byte [] DATASET_RESULTS_KEY = {'r'};
-
-  @Override
-  public void configure() {
-    setName("LogAnalyticsApp");
-    setDescription("An application that computes top 10 clientIPs from Apache access log data");
-    addStream(new Stream("logEvent"));
-    addMapReduce(new TopClientsMapReduce());
-    addService(new TopClientsService());
-    try {
-      DatasetProperties props = ObjectStores.objectStoreProperties(Types.listOf(ClientCount.class),
-                                                                   DatasetProperties.EMPTY);
-      createDataset(DATASET_NAME, ObjectStore.class, props);
-    } catch (UnsupportedTypeException e) {
-      throw Throwables.propagate(e);
+  public class TrafficApp extends AbstractApplication {
+    static final String APP_NAME = "TrafficApp";
+    static final String STREAM_NAME = "trafficEvents";
+    static final String TIMESERIES_TABLE_NAME = "trafficEventTable";   
+  
+    public static final int TIMESERIES_INTERVAL = 15 * 60 * 1000; // 15 minutes 
+  
+    @Override
+    public void configure() {
+      setName(APP_NAME);
+  
+      addStream(new Stream(STREAM_NAME));
+      // configure the timeseries table
+      DatasetProperties props =
+        TimeseriesTables.timeseriesTableProperties(TIMESERIES_INTERVAL,
+                                                   DatasetProperties.EMPTY);
+      createDataset(TIMESERIES_TABLE_NAME, CounterTimeseriesTable.class, props);
+      addFlow(new TrafficFlow());
+      addService(new TrafficConditionService());
     }
   }
-}
 
 .. |(AppDesign)| image:: docs/img/app-design.png
