@@ -205,8 +205,8 @@ the result to the output Dataset which is configured in the ``configure()`` meth
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
-      // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as output the entries
-      // will be written to the Dataset without any additional effort.
+      // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used
+      //  as output the entries will be written to the Dataset without any additional effort.
       List<ClientCount> topNResults = Lists.newArrayList();
       while (priorityQueue.size() != 0) {
         topNResults.add(priorityQueue.poll());
