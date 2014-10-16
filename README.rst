@@ -275,7 +275,7 @@ Next, we will send some sample Apache access log event into the stream for proce
   cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 145 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
 
 
-We can now start the MapReduce job to process the events that were ingested
+We can now start the MapReduce job to process the events that were ingested::
 
   cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
@@ -294,6 +294,11 @@ Example output::
 You have now learnt how to write MapReduce job to process events from a stream, write results to a DataSet and query
 the results using services.
 
+Related Topics
+--------------
+
+* `Wise: Web Analytics <http://docs.cask.co/tutorial/current/en/tutorial2.html>`_ tutorial
+
 Extend This Example
 -------------------
 Now that you have the basics of MapReduce programs down, you can extend this example by:
@@ -302,7 +307,7 @@ Now that you have the basics of MapReduce programs down, you can extend this exa
 * Store the results in a Timeseries data to analyze trends
 
 Share and Discuss
----------------
+-----------------
 
 Have a question? Discuss at `CDAP User Mailing List <https://groups.google.com/forum/#!forum/cdap-user>`_
 
