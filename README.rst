@@ -11,7 +11,7 @@ What You Will Build
 This guide will take you through building a CDAP application that uses ingested Apache access log events to compute
 top 10 client IPs in a specific time-range and query the results. You will:
 
-* Build `MapReduce<http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce>`_ job to process Apache access log events
+* Build `MapReduce <http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce>`_ job to process Apache access log events
 * Use `Dataset <http://docs.cask.co/cdap/current/en/dev-guide.html#datasets>`_ to persist results of the MapReduce job
 * Build a `Service <http://docs.cask.co/cdap/current/en/dev-guide.html#services>`_ to serve the results via HTTP
 
