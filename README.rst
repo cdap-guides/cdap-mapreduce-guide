@@ -251,7 +251,7 @@ We can now start the TopClients service and query the processing results::
 
 Example output::
 
-  placeholder
+[{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
 
 You have now learnt how to write MapReduce job to process events from a stream, write results to a DataSet and query
 the results using services.
