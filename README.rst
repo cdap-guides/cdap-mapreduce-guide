@@ -275,7 +275,7 @@ Next, we will send some sample Apache access log event into the stream for proce
   cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 145 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
 
 
-We can now start the MapReduce job to process the events that were ingested
+We can now start the MapReduce job to process the events that were ingested::
 
   cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
