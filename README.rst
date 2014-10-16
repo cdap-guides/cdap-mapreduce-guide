@@ -11,9 +11,8 @@ What You Will Build
 This guide will take you through building a CDAP application that ingests Apache access log events, computes
 top 10 client IPs that sends requests in the last hour and query the results. You will:
 
-* Build MapReduce program to process events from Apache access log
-* Use `Dataset <http://docs.cask.co/cdap/current/en/dev-guide.html#datasets>`_ to persist the result of a
-  MapReduce program
+* Build `MapReduce<http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce>`_ job to process Apache access log events
+* Use `Dataset <http://docs.cask.co/cdap/current/en/dev-guide.html#datasets>`_ to persist results of the MapReduce job
 * Build a `Service <http://docs.cask.co/cdap/current/en/dev-guide.html#services>`_ to serve the results via HTTP
 
 
@@ -27,15 +26,17 @@ What You Will Need
 Let’s Build It!
 ---------------
 
-Following sections will guide you through building an application from scratch. You can download its source code and binaries from `here <placeholder..>`_ 
+Following sections will guide you through building an application from scratch. If you are interested in deploying and
+running the application right away, you can clone its source code from this github repository. In that case feel free
+to skip the next two sections and jump right to Build & Run section.
 
 Application Design
 ------------------
 
-The application will assume that we are processing Apache access log events from Apache servers. The log events can be ingested
+The application will assume that the Apache access logs are ingested into a Stream. The log events can be ingested
 into a Stream continuously in real-time or in batches, which doesn’t affect the ability to consume it by MapReduce.
 
-MapReduce job extract necessary information from raw logs and computes top 10 Client IPs by traffic in a specific time range.
+MapReduce job extracts necessary information from raw logs and computes top 10 Client IPs by traffic in a specific time range.
 The results of the computation are persisted in a Dataset.
 
 The application also contains a Service that exposes HTTP endpoint to access data stored in a Dataset.
@@ -50,7 +51,6 @@ The first step is to get our application structure set up.  We will use a standa
 the source code files::
 
   ./pom.xml
-  ./README.rst
   ./src/main/java/co/cask/cdap/guides/ClientCount.java
   ./src/main/java/co/cask/cdap/guides/LogAnalyticsApp.java
   ./src/main/java/co/cask/cdap/guides/package-info.java
@@ -59,7 +59,6 @@ the source code files::
   ./src/main/java/co/cask/cdap/guides/TopNClientsReducer.java
   ./src/main/java/co/cask/cdap/guides/CountsCombiner.java
   ./src/main/java/co/cask/cdap/guides/TopClientsService.java
-  ./src/main/assembly/assembly.xml
   ./src/test/java/co/cdap/guides/LogAnalyticsAppTest.java
 
 
@@ -91,8 +90,10 @@ and overrides the ``configure()`` method in order to define all of the applicati
     }
   }
 
-The LogAnalyticsapplication defines a new `Stream <http://docs.cdap.io/cdap/current/en/dev-guide.html#streams>`_ to ingest the Apache access log events.
-The log events can be ingested into CDAP using a RESTful API. Once the data is ingested into the stream the events
+The LogAnalytics application defines a new `Stream <http://docs.cdap.io/cdap/current/en/dev-guide.html#streams>`_
+where Apache access logs are ingested to.
+
+The log events can be ingested into CDAP stream. Once the data is ingested into the stream the events
 can be processed in real-time or batch. In our application, we will process the events in batch using the
 TopClientsMapReduce program and compute top10 client IPs in a specific time-range.
 
@@ -105,11 +106,9 @@ The TopClientsMapReduce job extends an
 `AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`_
 class and overrides the ``configure()`` and ``beforeSubmit()`` methods.
 
-* ``configure()`` method configures a MapReduce job, by returning an instance of
-`MapReduceSpecification <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/MapReduceSpecification.html>`_. The MapReduce
-job name, description and output Dataset are configured in the example.
+* ``configure()`` method configures a MapReduce job, by setting job name, description and output Dataset.
 
-* ``beforeSubmit()`` method is invoked at runtime, before the MapReduce job is executed. Here, you will have access to the
+* ``beforeSubmit()`` method is invoked at runtime, before the MapReduce job is executed. Here, you can access the
 Hadoop job configuration through the MapReduceContext. Mapper and Reducer classes as well as the intermediate data
 format are set in this method.
 
@@ -150,7 +149,7 @@ format are set in this method.
   }
 
 
-The next step is to implement the Mapper and Reduce classes. The Mapper and Reducer classes extend from the standard
+In this example Mapper and Reducer classes are built by implementing
 `Hadoop APIs<http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`_
 
 In the application, the Mapper class reads the Apache access log event from the stream and produces clientIP and count
