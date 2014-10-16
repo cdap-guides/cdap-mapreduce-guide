@@ -28,8 +28,7 @@ Let’s Build It!
 ---------------
 
 Following sections will guide you through building an application from scratch. If you are interested in deploying and
-running the application right away, you can download its source code and binaries from `here <placeholder..>`_ In that
-case feel free to skip the next two sections and jump right to Build and Run Application section.
+running the application right away, you can download its source code and binaries from `here <placeholder..>`_ 
 
 Application Design
 ------------------
