@@ -226,6 +226,52 @@ The LogAnalyticsApp can be built and packaged using standard Apache maven comman
 
   mvn clean package
 
+Note that the remaining commands assume that the cdap-cli.sh script is available on your PATH. If this is not the case, please add it::
 
+  export PATH=$PATH:<CDAP home>/bin
+
+We can then deploy the application to a standalone CDAP installation::
+
+  cdap-cli.sh deploy app target/cdap-mapreduce-guide-1.0.0.jar
+
+Next, we will send some sample Apache access log event into the stream for processing::
+
+  cdap-cli.sh send stream logEvent "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cdap.html HTTP/1.0\" 200 190 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+  cdap-cli.sh send stream logEvent "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 102 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+  cdap-cli.sh send stream logEvent "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /coopr.html HTTP/1.0\" 200 121 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+  cdap-cli.sh send stream logEvent "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 111 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+  cdap-cli.sh send stream logEvent "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 145 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+
+
+We can now start the MapReduce job to process the events that were ingested
+
+  cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
+
+The MapReduce job will take a couple of minutes to process the sample data ingested.
+
+We can now start the TopClients service and check the service calls::
+
+  cdap-cli.sh start service LogAnalyticsApp.TopClientsService
+
+  curl http://localhost:10000/v2/apps/LogAnalytics/services/TopClientsService/methods/results && echo
+
+Example output::
+
+  placeholder
+
+You have now learnt how to write MapReduce job to process events from a stream, write results to a DataSet and query
+the results using services.
+
+Extend This Example
+-------------------
+Now that you have the basics of MapReduce programs down, you can extend this example by:
+
+* Writing a workflow to schedule this MapReduce job every hour and process the last hour's data
+* Store the results in a Timeseries data for each run of the MapReduce job
+
+Share and Discuss
+---------------
+
+Have a question? Discuss at `CDAP User Mailing List <https://groups.google.com/forum/#!forum/cdap-user>`_
 
 .. |(AppDesign)| image:: docs/img/app-design.png
