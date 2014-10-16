@@ -65,7 +65,7 @@ the source code files::
 
 The CDAP application is identified by LogAnalyticsApp class. This class extends an
 `AbstractApplication <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`_,
-and overrides the configure() method in order to define all of the application components:
+and overrides the ``configure()`` method in order to define all of the application components:
 
 .. code:: java
 
