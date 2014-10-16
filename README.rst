@@ -150,7 +150,7 @@ format are set in this method.
 
 
 In this example Mapper and Reducer classes are built by implementing
-`Hadoop APIs<http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`_
+`Hadoop APIs <http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`_
 
 In the application, the Mapper class reads the Apache access log event from the stream and produces clientIP and count
 as the intermediate map output key and value.
