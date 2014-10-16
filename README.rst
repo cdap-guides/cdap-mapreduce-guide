@@ -254,7 +254,7 @@ TopClientsService defines a simple HTTP REST endpoint to perform this query and 
 Build and Run
 -------------
 
-The LogAnalyticsApp can be built and packaged using Apache maven command:
+The LogAnalyticsApp can be built and packaged using Apache maven command::
 
   mvn clean package
 
