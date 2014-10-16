@@ -260,6 +260,10 @@ Note that the remaining commands assume that the cdap-cli.sh script is available
 
   export PATH=$PATH:<CDAP home>/bin
 
+If you haven't started already CDAP standalone, start it with the following commands::
+
+  cdap.sh start
+
 We can then deploy the application to a standalone CDAP installation::
 
   cdap-cli.sh deploy app target/cdap-mapreduce-guide-1.0.0.jar
