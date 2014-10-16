@@ -16,10 +16,8 @@
 
 package co.cdap.guides;
 
-import com.google.common.base.Objects;
-
 /**
- * Pojo to store clientIP and count.
+ * Holds clientIP, count pairs.
  */
 public class ClientCount implements Comparable<ClientCount> {
   private final String clientIP;
@@ -36,14 +34,6 @@ public class ClientCount implements Comparable<ClientCount> {
 
   public int getCount() {
     return count;
-  }
-
-  @Override
-  public String toString() {
-    return Objects.toStringHelper(this)
-                    .add("ip", clientIP)
-                    .add("count", count)
-                    .toString();
   }
 
   @Override
