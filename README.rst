@@ -256,7 +256,7 @@ The LogAnalyticsApp can be built and packaged using Apache maven command::
 
   mvn clean package
 
-Note that the remaining commands assume that the cdap-cli.sh script is available on your PATH. If this is not the case, please add it::
+Note that the remaining commands assume that the ``cdap-cli.sh`` script is available on your PATH. If this is not the case, please add it::
 
   export PATH=$PATH:<CDAP home>/bin
 
