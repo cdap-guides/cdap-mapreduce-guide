@@ -70,14 +70,13 @@ and overrides the ``configure()`` method in order to define all of the applicati
 
   public class LogAnalyticsApp extends AbstractApplication {
     
-    public static final String DATASET_NAME = "resultStore";
-    public static final byte [] DATASET_RESULTS_KEY = {'r'};
-    
+    public static final String DATASET_NAME = "topClients";
+
     @Override
     public void configure() {
       setName("LogAnalyticsApp");
       setDescription("An application that computes top 10 clientIPs from Apache access log data");
-      addStream(new Stream("logEvent"));
+      addStream(new Stream("logEvents"));
       addMapReduce(new TopClientsMapReduce());
       try {
         DatasetProperties props = ObjectStores.objectStoreProperties(Types.listOf(ClientCount.class),
@@ -144,13 +143,13 @@ format are set in this method.
       // Read events from last 60 minutes as input to the mapper.
       final long endTime = context.getLogicalStartTime();
       final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
-      StreamBatchReadable.useStreamInput(context, "logEvent", startTime, endTime);
+      StreamBatchReadable.useStreamInput(context, "logEvents", startTime, endTime);
     }
   }
 
 
 In this example Mapper and Reducer classes are built by implementing
-`Hadoop APIs<http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`_
+`Hadoop APIs <http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`_
 
 In the application, the Mapper class reads the Apache access log event from the stream and produces clientIP and count
 as the intermediate map output key and value.
@@ -178,6 +177,43 @@ to compute top 10 results. The top 10 results are written to the MapReduce conte
 Reducer, which is called once during the end of the task. Writing the results in the context automatically writes
 the result to output Dataset which is configured in the configure() method of the MapReduce program.
 
+.. code:: java
+
+  public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<ClientCount>> {
+
+    private static final int COUNT = 10;
+    private static final PriorityQueue<ClientCount> priorityQueue = new PriorityQueue<ClientCount>(COUNT);
+
+    @Override
+    protected void reduce(Text key, Iterable<IntWritable> values, Context context)
+                          throws IOException, InterruptedException {
+      // For each Key: IP, aggregate the Value: Count.
+      int count = 0;
+      for (IntWritable data : values) {
+        count += data.get();
+      }
+
+      // Store the Key and Value in a priority queue.
+      priorityQueue.add(new ClientCount(key.toString(), count));
+
+      // Ensure the priority queue is always contains topN count.
+      if (priorityQueue.size() > COUNT) {
+        priorityQueue.poll();
+      }
+    }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+      // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as output the entries
+      // will be written to the Dataset without any additional effort.
+      List<ClientCount> topNResults = Lists.newArrayList();
+      while (priorityQueue.size() != 0) {
+        topNResults.add(priorityQueue.poll());
+      }
+      context.write(TopClientsService.DATASET_RESULTS_KEY, topNResults);
+    }
+  }
+
 Now that we have setup the data ingestion and processing components, the next step is to create a service to query
 the processed data.
 
@@ -186,6 +222,8 @@ TopClientsService defines a simple HTTP REST endpoint to perform this query and 
 .. code:: java
 
   public class TopClientsService extends AbstractService {
+
+    public static final byte [] DATASET_RESULTS_KEY = {'r'};
 
     @Override
     protected void configure() {
@@ -202,7 +240,7 @@ TopClientsService defines a simple HTTP REST endpoint to perform this query and 
       @Path("/results")
       public void getResults(HttpServiceRequest request, HttpServiceResponder responder) {
 
-        List<ClientCount> result = topN.read(LogAnalyticsApp.DATASET_RESULTS_KEY);
+        List<ClientCount> result = topN.read(DATASET_RESULTS_KEY);
         if (result == null) {
           responder.sendError(404, "Result not found");
         } else {
