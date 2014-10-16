@@ -60,7 +60,6 @@ the source code files::
   ./src/main/java/co/cask/cdap/guides/IPMapper.java
   ./src/main/java/co/cask/cdap/guides/TopNClientsReducer.java
   ./src/main/java/co/cask/cdap/guides/CountsCombiner.java
-
   ./src/main/java/co/cask/cdap/guides/TopClientsService.java
   ./src/main/assembly/assembly.xml
   ./src/test/java/co/cdap/guides/LogAnalyticsAppTest.java
@@ -106,8 +105,7 @@ the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
-The TopClientsMapReduce job extends an
-`AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>_`
+The TopClientsMapReduce job extends an `AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>_`
 class and overrides the configure() and beforeSubmit().
 
 * configure() method configures a MapReduce job, by returning an instance of
