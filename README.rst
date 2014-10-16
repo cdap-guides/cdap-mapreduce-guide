@@ -8,7 +8,7 @@ MapReduce in the `Cask Data Application Platform (CDAP). <http://cdap.io>`_
 What You Will Build
 -------------------
 
-This guide will take you through building a CDAP application that ingests data from Apache access log, computes
+This guide will take you through building a CDAP application that ingests Apache access log events, computes
 top 10 client IPs that sends requests in the last hour and query the results. You will:
 
 * Build MapReduce program to process events from Apache access log
@@ -27,17 +27,16 @@ What You Will Need
 Let’s Build It!
 ---------------
 
-Following sections will guide you through building an application from scratch. If you are interested in deploying and
-running the application right away, you can download its source code and binaries from `here <placeholder..>`_ 
+Following sections will guide you through building an application from scratch. You can download its source code and binaries from `here <placeholder..>`_ 
 
 Application Design
 ------------------
 
-The application processes Apache access logs data ingested into the Stream using MapReduce job. The data can be ingested
+The application will assume that we are processing Apache access log events from Apache servers. The log events can be ingested
 into a Stream continuously in real-time or in batches, which doesn’t affect the ability to consume it by MapReduce.
 
-MapReduce job extract necessary information from raw web logs and computes top 10 Client IPs. The results of the
-computation are stored in a Dataset.
+MapReduce job extract necessary information from raw logs and computes top 10 Client IPs by traffic in a specific time range.
+The results of the computation are persisted in a Dataset.
 
 The application also contains a Service that exposes HTTP endpoint to access data stored in a Dataset.
 
