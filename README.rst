@@ -105,7 +105,8 @@ the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
-The TopClientsMapReduce job extends an `AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>_`
+The TopClientsMapReduce job extends an 
+`AbstractMapReduce <http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`_
 class and overrides the configure() and beforeSubmit().
 
 * configure() method configures a MapReduce job, by returning an instance of
