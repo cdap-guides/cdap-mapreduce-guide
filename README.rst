@@ -8,8 +8,8 @@ MapReduce in the `Cask Data Application Platform (CDAP). <http://cdap.io>`_
 What You Will Build
 -------------------
 
-This guide will take you through building a CDAP application that ingests Apache access log events, computes
-top 10 client IPs that sends requests in the last hour and query the results. You will:
+This guide will take you through building a CDAP application that uses ingested Apache access log events to compute
+top 10 client IPs in a specific time-range and query the results. You will:
 
 * Build `MapReduce<http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce>`_ job to process Apache access log events
 * Use `Dataset <http://docs.cask.co/cdap/current/en/dev-guide.html#datasets>`_ to persist results of the MapReduce job
@@ -216,7 +216,7 @@ TopClientsService defines a simple HTTP REST endpoint to perform this query and 
 Build and Run
 -------------
 
-The LogAnalyticsApp can be built and packaged using standard Apache maven command:
+The LogAnalyticsApp can be built and packaged using Apache maven command:
 
   mvn clean package
 
@@ -241,9 +241,9 @@ We can now start the MapReduce job to process the events that were ingested
 
   cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
-The MapReduce job will take a couple of minutes to process the sample data ingested.
+The MapReduce job will take a couple of minutes to process.
 
-We can now start the TopClients service and check the service calls::
+We can now start the TopClients service and query the processing results::
 
   cdap-cli.sh start service LogAnalyticsApp.TopClientsService
 
@@ -260,8 +260,8 @@ Extend This Example
 -------------------
 Now that you have the basics of MapReduce programs down, you can extend this example by:
 
-* Writing a workflow to schedule this MapReduce job every hour and process the last hour's data
-* Store the results in a Timeseries data for each run of the MapReduce job
+* Writing a `workflow <http://docs.cask.co/cdap/current/en/dev-guide.html#workflow>`_ to schedule this MapReduce job every hour and process the last hour's data
+* Store the results in a Timeseries data to analyze trends
 
 Share and Discuss
 ---------------
