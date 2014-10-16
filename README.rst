@@ -53,13 +53,11 @@ the source code files::
   ./pom.xml
   ./src/main/java/co/cask/cdap/guides/ClientCount.java
   ./src/main/java/co/cask/cdap/guides/LogAnalyticsApp.java
-  ./src/main/java/co/cask/cdap/guides/package-info.java
   ./src/main/java/co/cask/cdap/guides/TopClientsMapReduce.java
   ./src/main/java/co/cask/cdap/guides/IPMapper.java
   ./src/main/java/co/cask/cdap/guides/TopNClientsReducer.java
   ./src/main/java/co/cask/cdap/guides/CountsCombiner.java
   ./src/main/java/co/cask/cdap/guides/TopClientsService.java
-  ./src/test/java/co/cdap/guides/LogAnalyticsAppTest.java
 
 
 The CDAP application is identified by LogAnalyticsApp class. This class extends an
