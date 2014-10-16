@@ -33,6 +33,9 @@
     <guava.version>13.0.1</guava.version>
     <junit.version>4.11</junit.version>
     <hadoop.version>2.3.0</hadoop.version>
+    <sdk.dir>${project.build.directory}/sdk</sdk.dir>
+    <stage.opt.dir>${sdk.dir}/cdap-mapreduce-guide-${project.version}</stage.opt.dir>
+    <stage.lib.dir>${stage.opt.dir}/lib</stage.lib.dir>
   </properties>
 
   <dependencies>
@@ -235,4 +238,81 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>dist</id>
+      <build>
+        <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <id>copy-bin</id>
+                <phase>prepare-package</phase>
+                <goals><goal>copy-resources</goal></goals>
+                <configuration combine.self="override">
+                  <outputDirectory>${stage.opt.dir}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/bin</directory>
+                      <targetPath>bin</targetPath>
+                    </resource>
+                    <resource>
+                      <directory>${project.basedir}/</directory>
+                      <includes>
+                        <include>README.rst</include>
+                      </includes>
+                      <filtering>true</filtering>
+                    </resource>
+                    <resource>
+                      <directory>${project.basedir}/</directory>
+                      <includes>
+                        <include>LICENSE</include>
+                      </includes>
+                    </resource>
+                    <resource>
+                      <directory>${project.basedir}</directory>
+                      <targetPath>./</targetPath>
+                      <includes>
+                        <include>README*</include>
+                        <include>**/src/**</include>
+                        <include>**/pom.xml</include>
+                        <include>**/README*</include>
+                        <include>**/target/*.jar</include>
+                      </includes>
+                      <excludes>
+                        <exclude>**/target/original*.jar</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+              <execution>
+                <id>assembly</id>
+                <phase>package</phase>
+                <goals><goal>single</goal></goals>
+                <configuration>
+                  <finalName>cdap-mapreduce-guide</finalName>
+                  <formats><format>zip</format></formats>
+                  <descriptors>
+                    <descriptor>${project.basedir}/src/main/assembly/assembly.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
