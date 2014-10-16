@@ -91,15 +91,13 @@ and overrides the ``configure()`` method in order to define all of the applicati
     }
   }
 
-The LogAnalyticsApp processes event streams from Apache access log, the application defines a new
-`Stream <http://docs.cdap.io/cdap/current/en/dev-guide.html#streams>`_ to ingest the Apache access log events.
-The Streams can be ingested into CDAP using a RESTful API. Once the data is ingested into the stream the events
-can be processed in real-time or batch. In our application, we process the events in batch using the
+The LogAnalyticsapplication defines a new `Stream <http://docs.cdap.io/cdap/current/en/dev-guide.html#streams>`_ to ingest the Apache access log events.
+The log events can be ingested into CDAP using a RESTful API. Once the data is ingested into the stream the events
+can be processed in real-time or batch. In our application, we will process the events in batch using the
 TopClientsMapReduce program and compute top10 client IPs in a specific time-range.
 
 The results of the MapReduce job is persisted into a Dataset, the application uses createDataset method to define
-the Dataset that will be used to store the result. Finally, the application adds a service to query the results from
-the Dataset.
+the Dataset. Finally, the application adds a service to query the results from the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
