@@ -59,7 +59,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
     // Read events from last 60 minutes as input to the mapper.
     final long endTime = context.getLogicalStartTime();
     final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
-    StreamBatchReadable.useStreamInput(context, "logEvent", startTime, endTime);
+    StreamBatchReadable.useStreamInput(context, "logEvents", startTime, endTime);
   }
 
 }
