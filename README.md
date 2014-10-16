@@ -1,2 +1,0 @@
-CDAP MapReduce Guide
-====================
