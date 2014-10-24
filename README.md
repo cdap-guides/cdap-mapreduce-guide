@@ -16,13 +16,13 @@ specific time-range and query the results. You will:
 
 -   Build a
     [MapReduce](http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce)
-    job to process Apache access log events
+    job to process Apache access log events;
 -   Use a
     [Dataset](http://docs.cask.co/cdap/current/en/dev-guide.html#datasets)
-    to persist results of the MapReduce job
+    to persist results of the MapReduce job; and
 -   Build a
     [Service](http://docs.cask.co/cdap/current/en/dev-guide.html#services)
-    to serve the results via HTTP
+    to serve the results via HTTP.
 
 What You Will Need
 ------------------
@@ -34,11 +34,11 @@ What You Will Need
 Let’s Build It!
 ---------------
 
-The following sections will guide you through building an application
-from scratch. If you are interested in deploying and running the
-application right away, you can clone its source code from this GitHub
-repository. In that case, feel free to skip the next two sections and
-jump right to the Build and Run\_ section.
+The following sections will guide you through building an application from scratch. If you
+are interested in deploying and running the application right away, you can clone its
+source code from this GitHub repository. In that case, feel free to skip the next two
+sections and jump right to the 
+Build and Run Application\_ section.
 
 Application Design
 ------------------
@@ -65,18 +65,17 @@ standard Maven project structure for all of the source code files:
 
     ./pom.xml
     ./src/main/java/co/cdap/guides/ClientCount.java
+    ./src/main/java/co/cdap/guides/CountsCombiner.java
+    ./src/main/java/co/cdap/guides/IPMapper.java
     ./src/main/java/co/cdap/guides/LogAnalyticsApp.java
     ./src/main/java/co/cdap/guides/TopClientsMapReduce.java
-    ./src/main/java/co/cdap/guides/IPMapper.java
-    ./src/main/java/co/cdap/guides/TopNClientsReducer.java
-    ./src/main/java/co/cdap/guides/CountsCombiner.java
     ./src/main/java/co/cdap/guides/TopClientsService.java
+    ./src/main/java/co/cdap/guides/TopNClientsReducer.java
 
 The CDAP application is identified by the `LogAnalyticsApp` class. This
 class extends an
-[AbstractApplication](http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/app/AbstractApplication.html),
-and overrides the `configure()` method in order to define all of the
-application components:
+[AbstractApplication](http://docs.cdap.io/cdap/current/en/reference/javadocs/co/cask/cdap/api/app/AbstractApplication.html),
+and overrides the `configure()` method to define all of the application components:
 
 ``` {.sourceCode .java}
 public class LogAnalyticsApp extends AbstractApplication {
@@ -86,7 +85,7 @@ public class LogAnalyticsApp extends AbstractApplication {
   @Override
   public void configure() {
     setName("LogAnalyticsApp");
-    setDescription("An application that computes the top 10 clientIPs from Apache access log data");
+    setDescription("An application that computes the top 10 Client IPs from Apache access log data");
     addStream(new Stream("logEvents"));
     addMapReduce(new TopClientsMapReduce());
     try {
@@ -108,25 +107,27 @@ where Apache access logs are ingested.
 The log events can be ingested into the CDAP stream. Once the data is
 ingested, the events can be processed in realtime or batch. In our
 application, we will process the events in batch using the
-`TopClientsMapReduce` program and compute the top 10 clientIPs in a
+`TopClientsMapReduce` program and compute the top 10 Client IPs in a
 specific time-range.
 
 The results of the MapReduce job is persisted into a Dataset; the
 application uses the `createDataset` method to define the Dataset.
+The `ClientCount` class defines the types used in the Dataset.
+
 Finally, the application adds a service for querying the results from
 the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
 The `TopClientsMapReduce` job extends an
-[AbstractMapReduce](http://docs.cdap.io/cdap/2.5.1/en/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html)
+[AbstractMapReduce](http://docs.cdap.io/cdap/current/en/reference/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html)
 class and overrides the `configure()` and `beforeSubmit()` methods:
 
 -   `configure()` method configures a MapReduce job, setting the job
     name, description and output Dataset.
 -   `beforeSubmit()` method is invoked at runtime, before the MapReduce
     job is executed. Here you can access the Hadoop job configuration
-    through the MapReduceContext. Mapper and Reducer classes, as well as
+    through the `MapReduceContext`. Mapper, Reducer, and Combiner classes, as well as
     the intermediate data format, are set in this method.
 
 ``` {.sourceCode .java}
@@ -136,7 +137,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
   public MapReduceSpecification configure() {
     return MapReduceSpecification.Builder.with()
       .setName("TopClientsMapReduce")
-      .setDescription("MapReduce job that computes top 10 clients in the last 1 hour")
+      .setDescription("MapReduce job that computes top 10 Client IPs in the last 1 hour")
       .useOutputDataSet(LogAnalyticsApp.DATASET_NAME)
       .build();
   }
@@ -144,7 +145,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
   @Override
   public void beforeSubmit(MapReduceContext context) throws Exception {
 
-    // Get the Hadoop job context, set Mapper, reducer and combiner.
+    // Get the Hadoop job context, set Mapper, Reducer and Combiner.
     Job job = (Job) context.getHadoopJob();
 
     job.setMapOutputKeyClass(Text.class);
@@ -166,11 +167,10 @@ public class TopClientsMapReduce extends AbstractMapReduce {
 ```
 
 In this example, Mapper and Reducer classes are built by implementing
-the [Hadoop
-APIs.](http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html)
+the [Hadoop APIs.](http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html)
 
 In the application, the Mapper class reads the Apache access log event
-from the stream and produces the clientIP and count as the intermediate
+from the Stream and produces the Client IP and count as the intermediate
 map output key and value:
 
 ``` {.sourceCode .java}
@@ -190,8 +190,8 @@ public class IPMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 }
 ```
 
-The reducer class gets the clientIP and count from the map jobs and then
-aggregates the count for each clientIP and stores it in a priority
+The reducer class gets the Client IP and count from the MapReducer job and then
+aggregates the count for each Client IP and stores it in a priority
 queue. The number of reducers is set to 1, so that all results go into
 the same reducer to compute the top 10 results. The top 10 results are
 written to the MapReduce context in the cleanup method of the Reducer,
@@ -225,8 +225,8 @@ public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<
 
   @Override
   protected void cleanup(Context context) throws IOException, InterruptedException {
-    // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as output the entries
-    // will be written to the Dataset without any additional effort.
+    // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as  
+    // output the entries will be written to the Dataset without any additional effort.
     List<ClientCount> topNResults = Lists.newArrayList();
     while (priorityQueue.size() != 0) {
       topNResults.add(priorityQueue.poll());
@@ -239,7 +239,7 @@ public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<
 Now that we have set the data ingestion and processing components, the
 next step is to create a service to query the processed data.
 
-The `TopClientsService` defines a simple HTTP REST endpoint to perform
+The `TopClientsService` defines a simple HTTP RESTful endpoint to perform
 this query and return a response:
 
 ``` {.sourceCode .java}
@@ -286,8 +286,7 @@ available on your PATH. If this is not the case, please add it:
 
     export PATH=$PATH:<CDAP home>/bin
 
-If you haven't already started CDAP standalone, start it with the
-command:
+If you haven't already started CDAP standalone, start it with the command:
 
     cdap.sh start
 
@@ -322,15 +321,13 @@ Example output:
 
     [{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
 
-You have now learnt how to write a MapReduce job to process events from
-a stream, write the results to a Dataset and query the results using
-services.
+You have now learned how to write a MapReduce job to process events from
+a Stream, write the results to a Dataset and query the results using a Service.
 
 Related Topics
 --------------
 
--   [Wise: Web Analytics](http://docs.cask.co/tutorial/current/en/tutorial2.html)
-    tutorial
+-   [Wise: Web Analytics](http://docs.cask.co/tutorial/current/en/tutorial2.html) tutorial, part of CDAP
 
 Extend This Example
 -------------------
@@ -339,9 +336,8 @@ Now that you have the basics of MapReduce programs down, you can extend
 this example by:
 
 -   Writing a
-    [workflow](http://docs.cask.co/cdap/current/en/dev-guide.html#workflow)
-    to schedule this MapReduce job every hour and process the previous
-    hour's data
+    [workflow](http://docs.cask.co/cdap/current/en/developer-guide/building-blocks/workflows.html)
+    to schedule this MapReduce job every hour and process the previous hour's data
 -   Store the results in a Timeseries data to analyze trends
 
 Share and Discuss!
