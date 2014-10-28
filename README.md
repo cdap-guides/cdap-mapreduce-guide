@@ -55,7 +55,7 @@ The results of the computation are persisted in a Dataset.
 Finally, the application contains a Service that exposes an HTTP
 endpoint to access the data stored in the Dataset.
 
-![(AppDesign)](docs/images/app-design.png)
+![](docs/images/app-design.png)
 
 Implementation
 --------------
