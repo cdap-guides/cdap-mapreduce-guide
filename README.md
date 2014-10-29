@@ -16,7 +16,7 @@ that uses ingested Apache access log events to compute the top 10 client IPs in 
 specific time-range and query the results. You will:
 
 - Build a
-  [MapReduce](http://docs.cask.co/cdap/current/en/developer-guide/building-blocks/mapreduce-jobs.html)
+  [MapReduce](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/mapreduce-jobs.html)
   job to process Apache access log events;
 - Use a
   [Dataset](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/datasets/index.html)
