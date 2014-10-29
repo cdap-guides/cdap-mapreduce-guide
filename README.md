@@ -77,7 +77,7 @@ class extends an
 [AbstractApplication](http://docs.cdap.io/cdap/current/en/reference/javadocs/co/cask/cdap/api/app/AbstractApplication.html),
 and overrides the `configure()` method to define all of the application components:
 
-``` {.sourceCode .java}
+```java
 public class LogAnalyticsApp extends AbstractApplication {
 
   public static final String DATASET_NAME = "topClients";
@@ -130,7 +130,7 @@ class and overrides the `configure()` and `beforeSubmit()` methods:
     through the `MapReduceContext`. Mapper, Reducer, and Combiner classes, as well as
     the intermediate data format, are set in this method.
 
-``` {.sourceCode .java}
+```java
 public class TopClientsMapReduce extends AbstractMapReduce {
 
   @Override
@@ -173,7 +173,7 @@ In the application, the Mapper class reads the Apache access log event
 from the Stream and produces the Client IP and count as the intermediate
 map output key and value:
 
-``` {.sourceCode .java}
+```java
 public class IPMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
   private static final IntWritable OUTPUT_VALUE = new IntWritable(1);
 
@@ -199,7 +199,7 @@ which is called once during the end of the task. Writing the results in
 the context automatically writes the result to the output Dataset,
 specified in the `configure()` method of the MapReduce program.
 
-``` {.sourceCode .java}
+```java
 public class TopNClientsReducer extends Reducer<Text, IntWritable, byte[], List<ClientCount>> {
 
   private static final int COUNT = 10;
@@ -242,7 +242,7 @@ next step is to create a service to query the processed data.
 The `TopClientsService` defines a simple HTTP RESTful endpoint to perform
 this query and return a response:
 
-``` {.sourceCode .java}
+```java
 public class TopClientsService extends AbstractService {
 
   public static final byte [] DATASET_RESULTS_KEY = {'r'};
