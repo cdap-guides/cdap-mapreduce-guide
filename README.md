@@ -10,26 +10,27 @@ process data using MapReduce in the [Cask Data Application Platform
 What You Will Build
 -------------------
 
-This guide will take you through building a CDAP application that uses
-ingested Apache access log events to compute the top 10 client IPs in a
+This guide will take you through building a 
+[CDAP application](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/applications.html)
+that uses ingested Apache access log events to compute the top 10 client IPs in a
 specific time-range and query the results. You will:
 
--   Build a
-    [MapReduce](http://docs.cask.co/cdap/current/en/dev-guide.html#mapreduce)
-    job to process Apache access log events;
--   Use a
-    [Dataset](http://docs.cask.co/cdap/current/en/dev-guide.html#datasets)
-    to persist results of the MapReduce job; and
--   Build a
-    [Service](http://docs.cask.co/cdap/current/en/dev-guide.html#services)
-    to serve the results via HTTP.
+- Build a
+  [MapReduce](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/mapreduce-jobs.html)
+  job to process Apache access log events;
+- Use a
+  [Dataset](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/datasets/index.html)
+  to persist results of the MapReduce job; and
+- Build a
+  [Service](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/services.html)
+  to serve the results via HTTP.
 
 What You Will Need
 ------------------
 
--   [JDK 6 or JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
--   [Apache Maven 3.0+](http://maven.apache.org/)
--   [CDAP SDK](http://docs.cdap.io/cdap/current/en/getstarted.html#download-and-setup)
+- [JDK 6 or JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Apache Maven 3.0+](http://maven.apache.org/)
+- [CDAP SDK](http://docs.cdap.io/cdap/current/en/developer-guide/getting-started/standalone/index.html)
 
 Let’s Build It!
 ---------------
@@ -38,7 +39,7 @@ The following sections will guide you through building an application from scrat
 are interested in deploying and running the application right away, you can clone its
 source code from this GitHub repository. In that case, feel free to skip the next two
 sections and jump right to the 
-Build and Run Application\_ section.
+[Build and Run Application](#build-and-run-application) section.
 
 Application Design
 ------------------
@@ -101,7 +102,7 @@ public class LogAnalyticsApp extends AbstractApplication {
 ```
 
 The `LogAnalytics` application defines a new
-[Stream](http://docs.cdap.io/cdap/current/en/dev-guide.html#streams)
+[Stream](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/streams.html)
 where Apache access logs are ingested.
 
 The log events can be ingested into the CDAP stream. Once the data is
@@ -276,8 +277,7 @@ public class TopClientsService extends AbstractService {
 Build and Run Application
 -------------------------
 
-The `LogAnalyticsApp` can be built and packaged using the Apache maven
-command:
+The `LogAnalyticsApp` can be built and packaged using the Apache Maven command:
 
     mvn clean package
 
@@ -327,7 +327,7 @@ a Stream, write the results to a Dataset and query the results using a Service.
 Related Topics
 --------------
 
--   [Wise: Web Analytics](http://docs.cask.co/tutorial/current/en/tutorial2.html) tutorial, part of CDAP
+- [Wise: Web Analytics](http://docs.cask.co/tutorial/current/en/tutorial2.html) tutorial, part of CDAP
 
 Extend This Example
 -------------------
@@ -335,13 +335,29 @@ Extend This Example
 Now that you have the basics of MapReduce programs down, you can extend
 this example by:
 
--   Writing a
-    [workflow](http://docs.cask.co/cdap/current/en/developer-guide/building-blocks/workflows.html)
-    to schedule this MapReduce job every hour and process the previous hour's data
--   Store the results in a Timeseries data to analyze trends
+- Writing a
+  [workflow](http://docs.cask.co/cdap/current/en/developer-guide/building-blocks/workflows.html)
+  to schedule this MapReduce job every hour and process the previous hour's data
+- Store the results in a Timeseries data to analyze trends
 
 Share and Discuss!
 ------------------
 
-Have a question? Discuss at the [CDAP User Mailing List](https://groups.google.com/forum/#!forum/cdap-user)
+Have a question? Discuss at the [CDAP User Mailing List.](https://groups.google.com/forum/#!forum/cdap-user)
 
+License
+-------
+
+Copyright © 2014 Cask Data, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
