@@ -11,18 +11,18 @@ What You Will Build
 -------------------
 
 This guide will take you through building a 
-[CDAP application](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/applications.html)
+[CDAP application](http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/applications.html)
 that uses ingested Apache access log events to compute the top 10 client IPs in a
 specific time-range and query the results. You will:
 
 - Build a
-  [MapReduce](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/mapreduce-jobs.html)
+  [MapReduce](http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html)
   job to process Apache access log events;
 - Use a
-  [Dataset](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/datasets/index.html)
+  [Dataset](http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/datasets/index.html)
   to persist results of the MapReduce job; and
 - Build a
-  [Service](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/services.html)
+  [Service](http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/services.html)
   to serve the results via HTTP.
 
 What You Will Need
@@ -30,7 +30,7 @@ What You Will Need
 
 - [JDK 6 or JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Apache Maven 3.0+](http://maven.apache.org/)
-- [CDAP SDK](http://docs.cdap.io/cdap/current/en/developer-guide/getting-started/standalone/index.html)
+- [CDAP SDK](http://docs.cdap.io/cdap/current/en/developers-manual/getting-started/standalone/index.html)
 
 Let’s Build It!
 ---------------
@@ -75,7 +75,7 @@ standard Maven project structure for all of the source code files:
 
 The CDAP application is identified by the `LogAnalyticsApp` class. This
 class extends an
-[AbstractApplication](http://docs.cdap.io/cdap/current/en/reference/javadocs/co/cask/cdap/api/app/AbstractApplication.html),
+[AbstractApplication](http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html),
 and overrides the `configure()` method to define all of the application components:
 
 ```java
@@ -102,7 +102,7 @@ public class LogAnalyticsApp extends AbstractApplication {
 ```
 
 The `LogAnalytics` application defines a new
-[Stream](http://docs.cdap.io/cdap/current/en/developer-guide/building-blocks/streams.html)
+[Stream](http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/streams.html)
 where Apache access logs are ingested.
 
 The log events can be ingested into the CDAP stream. Once the data is
@@ -121,7 +121,7 @@ the Dataset.
 Let's take a closer look at the MapReduce program.
 
 The `TopClientsMapReduce` job extends an
-[AbstractMapReduce](http://docs.cdap.io/cdap/current/en/reference/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html)
+[AbstractMapReduce](http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html)
 class and overrides the `configure()` and `beforeSubmit()` methods:
 
 -   `configure()` method configures a MapReduce job, setting the job
@@ -336,7 +336,7 @@ Now that you have the basics of MapReduce programs down, you can extend
 this example by:
 
 - Writing a
-  [workflow](http://docs.cask.co/cdap/current/en/developer-guide/building-blocks/workflows.html)
+  [workflow](http://docs.cask.co/cdap/current/en/developers-manual/building-blocks/workflows.html)
   to schedule this MapReduce job every hour and process the previous hour's data
 - Store the results in a Timeseries data to analyze trends
 
