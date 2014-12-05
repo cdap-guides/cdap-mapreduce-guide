@@ -19,7 +19,6 @@ package co.cdap.guides;
 import co.cask.cdap.api.data.stream.StreamBatchReadable;
 import co.cask.cdap.api.mapreduce.AbstractMapReduce;
 import co.cask.cdap.api.mapreduce.MapReduceContext;
-import co.cask.cdap.api.mapreduce.MapReduceSpecification;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -32,12 +31,10 @@ import java.util.concurrent.TimeUnit;
 public class TopClientsMapReduce extends AbstractMapReduce {
 
   @Override
-  public MapReduceSpecification configure() {
-    return MapReduceSpecification.Builder.with()
-      .setName("TopClientsMapReduce")
-      .setDescription("MapReduce job that computes top 10 clients in the last 1 hour")
-      .useOutputDataSet(LogAnalyticsApp.RESULTS_DATASET_NAME)
-      .build();
+  public void configure() {
+    setName("TopClientsMapReduce");
+    setDescription("MapReduce job that computes top 10 clients in the last 1 hour");
+    setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
   }
 
   @Override
