@@ -135,12 +135,10 @@ class and overrides the `configure()` and `beforeSubmit()` methods:
 public class TopClientsMapReduce extends AbstractMapReduce {
 
   @Override
-  public MapReduceSpecification configure() {
-    return MapReduceSpecification.Builder.with()
-      .setName("TopClientsMapReduce")
-      .setDescription("MapReduce job that computes top 10 Client IPs in the last 1 hour")
-      .useOutputDataSet(LogAnalyticsApp.DATASET_NAME)
-      .build();
+  public void configure() {
+    setName("TopClientsMapReduce");
+    setDescription("MapReduce job that computes top 10 clients in the last 1 hour");
+    setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
   }
 
   @Override
