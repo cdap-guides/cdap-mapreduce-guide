@@ -16,11 +16,11 @@
 package co.cdap.guides;
 
 import co.cask.cdap.api.app.AbstractApplication;
+import co.cask.cdap.api.data.schema.UnsupportedTypeException;
 import co.cask.cdap.api.data.stream.Stream;
 import co.cask.cdap.api.dataset.DatasetProperties;
 import co.cask.cdap.api.dataset.lib.ObjectStore;
 import co.cask.cdap.api.dataset.lib.ObjectStores;
-import co.cask.cdap.internal.io.UnsupportedTypeException;
 import com.google.common.base.Throwables;
 import com.google.inject.util.Types;
 
