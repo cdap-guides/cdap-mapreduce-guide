@@ -69,7 +69,7 @@ public class LogAnalyticsAppTest extends TestBase {
 
     // Start the service.
     ServiceManager serviceManager = appManager.startService("TopClientsService");
-    serviceStatusCheck(serviceManager, true);
+    serviceManager.waitForStatus(true);
 
     // Query results via HTTP.
     URL url = new URL(serviceManager.getServiceURL(), "results");
@@ -90,16 +90,5 @@ public class LogAnalyticsAppTest extends TestBase {
     Assert.assertEquals("255.255.255.182", result.get(1).getClientIP());
 
     appManager.stopAll();
-  }
-
-  private void serviceStatusCheck(ServiceManager serviceManger, boolean running) throws InterruptedException {
-    int trial = 0;
-    while (trial++ < 5) {
-      if (serviceManger.isRunning() == running) {
-        return;
-      }
-      TimeUnit.SECONDS.sleep(1);
-    }
-    throw new IllegalStateException("Service state not executed. Expected " + running);
   }
 }
