@@ -1,4 +1,4 @@
-Batch Data Processing With CDAP
+Batch Data Processing with CDAP
 ===============================
 
 [MapReduce](http://research.google.com/archive/mapreduce.html) is the
