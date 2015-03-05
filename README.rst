@@ -2,36 +2,36 @@
 Batch Data Processing with CDAP
 ===============================
 
-`MapReduce <http://research.google.com/archive/mapreduce.html`__ is the
+`MapReduce <http://research.google.com/archive/mapreduce.html>`__ is the
 most popular paradigm for processing large amounts of data in a reliable
 and fault-tolerant manner. In this guide, you will learn how to batch
 process data using MapReduce in the `Cask Data Application Platform
-(CDAP) <http://cdap.io`__.
+(CDAP) <http://cdap.io>`__.
 
 What You Will Build
 ===================
 
 This guide will take you through building a 
-`CDAP application <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/applications.html`__
+`CDAP application <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/applications.html>`__
 that uses ingested Apache access log events to compute the top 10 client IPs in a
 specific time-range and query the results. You will:
 
 - Build a
-  `MapReduce <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html`__
+  `MapReduce <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html>`__
   job to process Apache access log events;
 - Use a
-  `Dataset <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/datasets/index.html`__
+  `Dataset <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/datasets/index.html>`__
   to persist results of the MapReduce job; and
 - Build a
-  `Service <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/services.html`__
+  `Service <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/services.html>`__
   to serve the results via HTTP.
 
 What You Will Need
 ==================
 
-- `JDK 6 or JDK 7 <http://www.oracle.com/technetwork/java/javase/downloads/index.html`__
-- `Apache Maven 3.0+ <http://maven.apache.org/`__
-- `CDAP SDK <http://docs.cdap.io/cdap/current/en/developers-manual/getting-started/standalone/index.html`__
+- `JDK 6 or JDK 7 <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`__
+- `Apache Maven 3.0+ <http://maven.apache.org/>`__
+- `CDAP SDK <http://docs.cdap.io/cdap/current/en/developers-manual/getting-started/standalone/index.html>`__
 
 Let’s Build It!
 ===============
@@ -40,7 +40,7 @@ The following sections will guide you through building an application from scrat
 are interested in deploying and running the application right away, you can clone its
 source code from this GitHub repository. In that case, feel free to skip the next two
 sections and jump right to the 
-`Build and Run Application <#build-and-run-application`__ section.
+`Build and Run Application <#build-and-run-application>`__ section.
 
 Application Design
 ------------------
@@ -78,7 +78,7 @@ standard Maven project structure for all of the source code files:
 
 The CDAP application is identified by the ``LogAnalyticsApp`` class. This
 class extends an `AbstractApplication 
-<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html`__,
+<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`__,
 and overrides the ``configure()`` method to define all of the application components:
 
 .. code:: java
@@ -105,7 +105,7 @@ and overrides the ``configure()`` method to define all of the application compon
   }
 
 The ``LogAnalytics`` application defines a new `Stream 
-<http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/streams.html`__
+<http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/streams.html>`__
 where Apache access logs are ingested.
 
 The log events can be ingested into the CDAP stream. Once the data is
@@ -124,10 +124,10 @@ the Dataset.
 Let's take a closer look at the MapReduce program.
 
 The ``TopClientsMapReduce`` job extends an `AbstractMapReduce 
-<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html`__
+<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
 class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
 
--   ``configure(`)` method configures a MapReduce, setting the program
+-   ``configure()`` method configures a MapReduce, setting the program
     name, description and output Dataset.
 -   ``beforeSubmit()`` method is invoked at runtime, before the MapReduce
     is executed. Here you can access the Hadoop job configuration
@@ -169,7 +169,7 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
   }
 
 In this example, Mapper and Reducer classes are built by implementing
-the `Hadoop APIs <http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html`__.
+the `Hadoop APIs <http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`__.
 
 In the application, the Mapper class reads the Apache access log event
 from the Stream and produces the Client IP and count as the intermediate
@@ -328,7 +328,7 @@ a Stream, write the results to a Dataset and query the results using a Service.
 Related Topics
 ==============
 
-- `Wise: Web Analytics <http://docs.cask.co/tutorial/current/en/tutorial2.html`__ tutorial, part of CDAP
+- `Wise: Web Analytics <http://docs.cask.co/tutorial/current/en/tutorial2.html>`__ tutorial, part of CDAP
 
 Extend This Example
 ===================
@@ -337,7 +337,7 @@ Now that you have the basics of MapReduce programs down, you can extend
 this example by:
 
 - Writing a `workflow 
-  <http://docs.cask.co/cdap/current/en/developers-manual/building-blocks/workflows.html`__
+  <http://docs.cask.co/cdap/current/en/developers-manual/building-blocks/workflows.html>`__
   to schedule this MapReduce every hour and process the previous hour's data
 - Store the results in a Timeseries data to analyze trends
 
