@@ -26,14 +26,14 @@ import org.apache.hadoop.mapreduce.Job;
 import java.util.concurrent.TimeUnit;
 
 /**
- * MapReduce that computes topN clientIP in Apache access log.
+ * MapReduce program that computes topN clientIP in Apache access log.
  */
 public class TopClientsMapReduce extends AbstractMapReduce {
 
   @Override
   public void configure() {
     setName("TopClientsMapReduce");
-    setDescription("MapReduce that computes top 10 clients in the last 1 hour");
+    setDescription("MapReduce program that computes top 10 clients in the last 1 hour");
     setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
   }
 

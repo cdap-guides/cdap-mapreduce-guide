@@ -17,11 +17,11 @@ that uses ingested Apache access log events to compute the top 10 client IPs in 
 specific time-range and query the results. You will:
 
 - Build a
-  `MapReduce <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html>`__
-  job to process Apache access log events;
+  `MapReduce program <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html>`__
+  to process Apache access log events;
 - Use a
   `Dataset <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/datasets/index.html>`__
-  to persist results of the MapReduce job; and
+  to persist results of the MapReduce program; and
 - Build a
   `Service <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/services.html>`__
   to serve the results via HTTP.
@@ -48,9 +48,9 @@ Application Design
 The application will assume that the Apache access logs are ingested
 into a Stream. The log events can be ingested into a Stream continuously
 in realtime or in batches; whichever way, it doesn’t affect the ability
-of the MapReduce job to consume them.
+of the MapReduce program to consume them.
 
-The MapReduce job extracts the required information from the raw logs
+The MapReduce program extracts the required information from the raw logs
 and computes the top 10 Client IPs by traffic in a specific time range.
 The results of the computation are persisted in a Dataset.
 
@@ -114,7 +114,7 @@ application, we will process the events in batch using the
 ``TopClientsMapReduce`` program and compute the top 10 Client IPs in a
 specific time-range.
 
-The results of the MapReduce job is persisted into a Dataset; the
+The results of the MapReduce program is persisted into a Dataset; the
 application uses the ``createDataset`` method to define the Dataset.
 The ``ClientCount`` class defines the types used in the Dataset.
 
@@ -123,7 +123,7 @@ the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
-The ``TopClientsMapReduce`` job extends an `AbstractMapReduce 
+The ``TopClientsMapReduce`` extends an `AbstractMapReduce 
 <http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
 class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
 
@@ -141,7 +141,7 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
     @Override
     public void configure() {
       setName("TopClientsMapReduce");
-      setDescription("MapReduce job that computes top 10 clients in the last 1 hour");
+      setDescription("MapReduce program that computes top 10 clients in the last 1 hour");
       setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
     }
 
@@ -304,12 +304,12 @@ for processing::
     cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 111 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
     cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 145 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
 
-We can now start the MapReduce job to process the events that were
+We can now start the MapReduce program to process the events that were
 ingested::
 
     cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
-The MapReduce will take a couple of minutes to process.
+The MapReduce program will take a couple of minutes to process.
 
 We can then start the ``TopClientsService`` and query the processed
 results::
@@ -322,7 +322,7 @@ Example output::
 
     [{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
 
-You have now learned how to write a MapReduce job to process events from
+You have now learned how to write a MapReduce program to process events from
 a Stream, write the results to a Dataset and query the results using a Service.
 
 Related Topics

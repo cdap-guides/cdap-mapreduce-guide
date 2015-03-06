@@ -63,7 +63,7 @@ public class LogAnalyticsAppTest extends TestBase {
 
     TimeUnit.SECONDS.sleep(5);
 
-    // Start MapReduce and wait at most 3 minutes to finish
+    // Start the MapReduce program and wait at most 3 minutes to finish
     MapReduceManager mapReduceManager = appManager.startMapReduce("TopClientsMapReduce");
     mapReduceManager.waitForFinish(3, TimeUnit.MINUTES);
 
