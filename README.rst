@@ -65,16 +65,16 @@ Implementation
 --------------
 
 The first step is to construct our application structure. We will use a
-standard Maven project structure for all of the source code files:
+standard Maven project structure for all of the source code files::
 
-    ./pom.xml
-    ./src/main/java/co/cdap/guides/ClientCount.java
-    ./src/main/java/co/cdap/guides/CountsCombiner.java
-    ./src/main/java/co/cdap/guides/IPMapper.java
-    ./src/main/java/co/cdap/guides/LogAnalyticsApp.java
-    ./src/main/java/co/cdap/guides/TopClientsMapReduce.java
-    ./src/main/java/co/cdap/guides/TopClientsService.java
-    ./src/main/java/co/cdap/guides/TopNClientsReducer.java
+  ./pom.xml
+  ./src/main/java/co/cdap/guides/ClientCount.java
+  ./src/main/java/co/cdap/guides/CountsCombiner.java
+  ./src/main/java/co/cdap/guides/IPMapper.java
+  ./src/main/java/co/cdap/guides/LogAnalyticsApp.java
+  ./src/main/java/co/cdap/guides/TopClientsMapReduce.java
+  ./src/main/java/co/cdap/guides/TopClientsService.java
+  ./src/main/java/co/cdap/guides/TopNClientsReducer.java
 
 The CDAP application is identified by the ``LogAnalyticsApp`` class. This
 class extends an `AbstractApplication 
@@ -280,47 +280,47 @@ Build and Run Application
 
 The ``LogAnalyticsApp`` can be built and packaged using the Apache Maven command::
 
-    mvn clean package
+  $ mvn clean package
 
 Note that the remaining commands assume that the ``cdap-cli.sh`` script is
 available on your PATH. If this is not the case, please add it::
 
-    export PATH=$PATH:<CDAP home>/bin
+  $ export PATH=$PATH:<CDAP home>/bin
 
 If you haven't already started a standalone CDAP installation, start it with the command::
 
-    cdap.sh start
+  $ cdap.sh start
 
 We can then deploy the application to the standalone CDAP installation::
 
-    cdap-cli.sh deploy app target/cdap-mapreduce-guide-1.0.0.jar
+  $ cdap-cli.sh deploy app target/cdap-mapreduce-guide-<version>.jar
 
 Next, we will send some sample Apache access log event into the stream
 for processing::
 
-    cdap-cli.sh send stream logEvents "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cdap.html HTTP/1.0\" 200 190 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
-    cdap-cli.sh send stream logEvents "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 102 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
-    cdap-cli.sh send stream logEvents "255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /coopr.html HTTP/1.0\" 200 121 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
-    cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 111 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
-    cdap-cli.sh send stream logEvents "255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 200 145 \" \"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n"
+  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /cdap.html HTTP/1.0" 200 190 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 102 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /coopr.html HTTP/1.0" 200 121 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 111 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 145 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
 
 We can now start the MapReduce program to process the events that were
 ingested::
 
-    cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
+  $ cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
-The MapReduce program will take a couple of minutes to process.
+The MapReduce program will take a couple of moments to process.
 
-We can then start the ``TopClientsService`` and query the processed
+We can then start the ``TopClientsService`` and then query the processed
 results::
 
-    cdap-cli.sh start service LogAnalyticsApp.TopClientsService
+  $ cdap-cli.sh start service LogAnalyticsApp.TopClientsService
 
-    curl http://localhost:10000/v2/apps/LogAnalyticsApp/services/TopClientsService/methods/results && echo
+  $ curl -w'\n' http://localhost:10000/v3/namespaces/default/apps/LogAnalyticsApp/services/TopClientsService/methods/results
 
 Example output::
 
-    [{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
+  [{"clientIP":"255.255.255.185","count":3},{"clientIP":"255.255.255.182","count":2}]
 
 You have now learned how to write a MapReduce program to process events from
 a Stream, write the results to a Dataset and query the results using a Service.
