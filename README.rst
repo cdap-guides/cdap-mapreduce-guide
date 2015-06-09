@@ -47,7 +47,7 @@ Application Design
 
 The application will assume that the Apache access logs are ingested
 into a Stream. The log events can be ingested into a Stream continuously
-in realtime or in batches; whichever way, it doesn’t affect the ability
+in real-time or in batches; whichever way, it doesn’t affect the ability
 of the MapReduce program to consume them.
 
 The MapReduce program extracts the required information from the raw logs
@@ -109,7 +109,7 @@ The ``LogAnalytics`` application defines a new `Stream
 where Apache access logs are ingested.
 
 The log events can be ingested into the CDAP stream. Once the data is
-ingested, the events can be processed in realtime or batch. In our
+ingested, the events can be processed in real-time or batch. In our
 application, we will process the events in batch using the
 ``TopClientsMapReduce`` program and compute the top 10 Client IPs in a
 specific time-range.
