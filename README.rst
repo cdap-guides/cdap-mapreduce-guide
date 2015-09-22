@@ -293,7 +293,8 @@ If you haven't already started a standalone CDAP installation, start it with the
 
 We can then deploy the application to the standalone CDAP installation::
 
-  $ cdap-cli.sh deploy app target/cdap-mapreduce-guide-<version>.jar
+  $ cdap-cli.sh load artifact target/cdap-mapreduce-guide-<version>.jar
+  $ cdap-cli.sh create app LogAnalyticsApp cdap-mapreduce-guide <version> user
 
 Next, we will send some sample Apache access log event into the stream
 for processing::
