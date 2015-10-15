@@ -18,7 +18,7 @@ package co.cdap.guides;
 import co.cask.cdap.test.ApplicationManager;
 import co.cask.cdap.test.MapReduceManager;
 import co.cask.cdap.test.ServiceManager;
-import co.cask.cdap.test.StreamWriter;
+import co.cask.cdap.test.StreamManager;
 import co.cask.cdap.test.TestBase;
 import co.cask.common.http.HttpRequest;
 import co.cask.common.http.HttpRequests;
@@ -47,28 +47,28 @@ public class LogAnalyticsAppTest extends TestBase {
     ApplicationManager appManager = deployApplication(LogAnalyticsApp.class);
 
     // Send stream events to the logEvent Stream
-    StreamWriter streamWriter = appManager.getStreamWriter("logEvents");
-    streamWriter.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cdap.html HTTP/1.0\" 200 299 \" \" " +
-                        "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
-    streamWriter.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cask.html HTTP/1.0\" 200 296 \" \" " +
-                        "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
-    streamWriter.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
-                        "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
+    StreamManager streamManager = getStreamManager("logEvents");
+    streamManager.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cdap.html HTTP/1.0\" 200 299 \" \" " +
+                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
+    streamManager.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /cask.html HTTP/1.0\" 200 296 \" \" " +
+                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
+    streamManager.send("255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
+                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
 
-    streamWriter.send("255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
-                        "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
-    streamWriter.send("255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
-                        "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
+    streamManager.send("255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
+                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
+    streamManager.send("255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] \"GET /tigon.html HTTP/1.0\" 401 2969 \" \" " +
+                         "\"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\"\n");
 
 
     TimeUnit.SECONDS.sleep(5);
 
     // Start the MapReduce program and wait at most 3 minutes to finish
-    MapReduceManager mapReduceManager = appManager.startMapReduce("TopClientsMapReduce");
+    MapReduceManager mapReduceManager = appManager.getMapReduceManager("TopClientsMapReduce").start();
     mapReduceManager.waitForFinish(3, TimeUnit.MINUTES);
 
     // Start the service
-    ServiceManager serviceManager = appManager.startService("TopClientsService");
+    ServiceManager serviceManager = appManager.getServiceManager("TopClientsService").start();
     serviceManager.waitForStatus(true);
 
     // Query results via HTTP.
@@ -79,7 +79,8 @@ public class LogAnalyticsAppTest extends TestBase {
 
     response.getResponseBody();
     List<ClientCount> result = GSON.fromJson(response.getResponseBodyAsString(),
-                                             new TypeToken<List<ClientCount>>() { }.getType());
+                                             new TypeToken<List<ClientCount>>() {
+                                             }.getType());
 
     Assert.assertEquals(2, result.size());
 
