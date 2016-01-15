@@ -76,6 +76,39 @@ standard Maven project structure for all of the source code files::
   ./src/main/java/co/cdap/guides/TopClientsService.java
   ./src/main/java/co/cdap/guides/TopNClientsReducer.java
 
+The ``pom.xml`` includes the Hadoop dependencies required to write a MapReduce program, namely:
+
+- ``hadoop-mapreduce-client-core`` for the MapReduce interfaces such as ``Mapper`` and ``Reducer``; and
+- ``hadoop-common`` for commonly-used Hadoop classes such as the various ``Writable`` classes that can be used as
+  map output types. 
+  
+When including these dependencies, pay special attention to exclude the transitive dependency on 
+``io.netty`` that may otherwise conflict with the version included by CDAP, as follows::
+
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>io.netty</groupId>
+          <artifactId>netty</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+Make sure you use the same version as is installed on your Hadoop cluster and
+use a scope of ``provided`` for the Hadoop dependencies. Note that you can use the `CDAP MapReduce Archetype
+<http://docs.cdap.io/cdap/current/en/developers-manual/getting-started/dev-env.html#creating-an-application>`__
+to create an application that includes MapReduce.
+
 The CDAP application is identified by the ``LogAnalyticsApp`` class. This
 class extends an `AbstractApplication 
 <http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`__,
@@ -170,6 +203,8 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
 
 In this example, Mapper and Reducer classes are built by implementing
 the `Hadoop APIs <http://hadoop.apache.org/docs/r2.3.0/api/org/apache/hadoop/mapreduce/package-summary.html>`__.
+Note that CDAP only supports the "new" API in ``org.apache.hadoop.mapreduce``, and not the
+"old" API in ``org.apache.hadoop.mapred``.
 
 In the application, the Mapper class reads the Apache access log event
 from the Stream and produces the Client IP and count as the intermediate
