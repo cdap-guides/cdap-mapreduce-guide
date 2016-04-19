@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Cask Data, Inc.
+ * Copyright © 2014-2016 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 
 package co.cdap.guides;
 
-import co.cask.cdap.api.data.stream.StreamBatchReadable;
+import co.cask.cdap.api.data.batch.Input;
 import co.cask.cdap.api.mapreduce.AbstractMapReduce;
 import co.cask.cdap.api.mapreduce.MapReduceContext;
 import org.apache.hadoop.io.IntWritable;
@@ -34,14 +34,13 @@ public class TopClientsMapReduce extends AbstractMapReduce {
   public void configure() {
     setName("TopClientsMapReduce");
     setDescription("MapReduce program that computes top 10 clients in the last 1 hour");
-    setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
   }
 
   @Override
   public void beforeSubmit(MapReduceContext context) throws Exception {
 
     // Get the Hadoop job context, set Mapper, reducer and combiner.
-    Job job = (Job) context.getHadoopJob();
+    Job job = context.getHadoopJob();
 
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(IntWritable.class);
@@ -56,7 +55,7 @@ public class TopClientsMapReduce extends AbstractMapReduce {
     // Read events from last 60 minutes as input to the mapper.
     final long endTime = context.getLogicalStartTime();
     final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
-    StreamBatchReadable.useStreamInput(context, "logEvents", startTime, endTime);
+    context.addInput(Input.ofStream("logEvents", startTime, endTime));
+    context.addOutput(LogAnalyticsApp.RESULTS_DATASET_NAME);
   }
-
 }
