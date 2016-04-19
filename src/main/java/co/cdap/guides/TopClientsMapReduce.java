@@ -17,6 +17,7 @@
 package co.cdap.guides;
 
 import co.cask.cdap.api.data.batch.Input;
+import co.cask.cdap.api.data.batch.Output;
 import co.cask.cdap.api.mapreduce.AbstractMapReduce;
 import co.cask.cdap.api.mapreduce.MapReduceContext;
 import org.apache.hadoop.io.IntWritable;
@@ -56,6 +57,6 @@ public class TopClientsMapReduce extends AbstractMapReduce {
     final long endTime = context.getLogicalStartTime();
     final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
     context.addInput(Input.ofStream("logEvents", startTime, endTime));
-    context.addOutput(LogAnalyticsApp.RESULTS_DATASET_NAME);
+    context.addOutput(Output.ofDataset(LogAnalyticsApp.RESULTS_DATASET_NAME));
   }
 }
