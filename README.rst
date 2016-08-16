@@ -142,7 +142,6 @@ class and overrides the ``configure()`` and ``initialize()`` methods:
     public void configure() {
       setName("TopClientsMapReduce");
       setDescription("MapReduce program that computes top 10 clients in the last 1 hour");
-      setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
     }
 
     @Override
@@ -165,7 +164,8 @@ class and overrides the ``configure()`` and ``initialize()`` methods:
       // Read events from last 60 minutes as input to the mapper.
       final long endTime = context.getLogicalStartTime();
       final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
-      StreamBatchReadable.useStreamInput(context, "logEvents", startTime, endTime);
+      context.addInput(Input.ofStream("logEvents", startTime, endTime));
+      context.addOutput(Output.ofDataset(LogAnalyticsApp.RESULTS_DATASET_NAME));
     }
   }
 

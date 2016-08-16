@@ -38,7 +38,8 @@ public class TopClientsMapReduce extends AbstractMapReduce {
   }
 
   @Override
-  public void beforeSubmit(MapReduceContext context) throws Exception {
+  public void initialize() throws Exception {
+    MapReduceContext context = getContext();
 
     // Get the Hadoop job context, set Mapper, reducer and combiner.
     Job job = context.getHadoopJob();
