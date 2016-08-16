@@ -125,14 +125,14 @@ Let's take a closer look at the MapReduce program.
 
 The ``TopClientsMapReduce`` extends an `AbstractMapReduce 
 <http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
-class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
+class and overrides the ``configure()`` and ``initialize()`` methods:
 
 -   ``configure()`` method configures a MapReduce, setting the program
     name, description and output Dataset.
--   ``beforeSubmit()`` method is invoked at runtime, before the MapReduce
-    is executed. Here you can access the Hadoop job configuration
-    through the ``MapReduceContext``. Mapper, Reducer, and Combiner classes—as well as
-    the intermediate data format—are set in this method.
+-   ``initialize()`` method is invoked at runtime, before the MapReduce
+    is executed. Here you can access the Hadoop job configuration through the
+    ``MapReduceContext`` returned by ``getContext()``. Mapper, Reducer, and Combiner
+    classes—as well as the intermediate data format—are set in this method.
 
 .. code:: java
 
@@ -146,7 +146,8 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
     }
 
     @Override
-    public void beforeSubmit(MapReduceContext context) throws Exception {
+    public void initialize() throws Exception {
+      MapReduceContext context = getContext();
 
       // Get the Hadoop job context, set Mapper, Reducer and Combiner.
       Job job = (Job) context.getHadoopJob();
