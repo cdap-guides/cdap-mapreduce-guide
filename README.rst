@@ -125,14 +125,14 @@ Let's take a closer look at the MapReduce program.
 
 The ``TopClientsMapReduce`` extends an `AbstractMapReduce 
 <http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
-class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
+class and overrides the ``configure()`` and ``initialize()`` methods:
 
 -   ``configure()`` method configures a MapReduce, setting the program
     name, description and output Dataset.
--   ``beforeSubmit()`` method is invoked at runtime, before the MapReduce
-    is executed. Here you can access the Hadoop job configuration
-    through the ``MapReduceContext``. Mapper, Reducer, and Combiner classes—as well as
-    the intermediate data format—are set in this method.
+-   ``initialize()`` method is invoked at runtime, before the MapReduce
+    is executed. Here you can access the Hadoop job configuration through the
+    ``MapReduceContext`` returned by ``getContext()``. Mapper, Reducer, and Combiner
+    classes—as well as the intermediate data format—are set in this method.
 
 .. code:: java
 
@@ -142,11 +142,11 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
     public void configure() {
       setName("TopClientsMapReduce");
       setDescription("MapReduce program that computes top 10 clients in the last 1 hour");
-      setOutputDataset(LogAnalyticsApp.RESULTS_DATASET_NAME);
     }
 
     @Override
-    public void beforeSubmit(MapReduceContext context) throws Exception {
+    public void initialize() throws Exception {
+      MapReduceContext context = getContext();
 
       // Get the Hadoop job context, set Mapper, Reducer and Combiner.
       Job job = (Job) context.getHadoopJob();
@@ -164,7 +164,8 @@ class and overrides the ``configure()`` and ``beforeSubmit()`` methods:
       // Read events from last 60 minutes as input to the mapper.
       final long endTime = context.getLogicalStartTime();
       final long startTime = endTime - TimeUnit.MINUTES.toMillis(60);
-      StreamBatchReadable.useStreamInput(context, "logEvents", startTime, endTime);
+      context.addInput(Input.ofStream("logEvents", startTime, endTime));
+      context.addOutput(Output.ofDataset(LogAnalyticsApp.RESULTS_DATASET_NAME));
     }
   }
 
