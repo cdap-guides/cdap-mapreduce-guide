@@ -283,40 +283,40 @@ The ``LogAnalyticsApp`` can be built and packaged using the Apache Maven command
 
   $ mvn clean package
 
-Note that the remaining commands assume that the ``cdap-cli.sh`` script is
+Note that the remaining commands assume that the ``cdap`` script is
 available on your PATH. If this is not the case, please add it::
 
   $ export PATH=$PATH:<CDAP home>/bin
 
 If you haven't already started a standalone CDAP installation, start it with the command::
 
-  $ cdap.sh start
+  $ cdap sdk start
 
 We can then deploy the application to the standalone CDAP installation::
 
-  $ cdap-cli.sh load artifact target/cdap-mapreduce-guide-<version>.jar
-  $ cdap-cli.sh create app LogAnalyticsApp cdap-mapreduce-guide <version> user
+  $ cdap cli load artifact target/cdap-mapreduce-guide-<version>.jar
+  $ cdap cli create app LogAnalyticsApp cdap-mapreduce-guide <version> user
 
 Next, we will send some sample Apache access log event into the stream
 for processing::
 
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /cdap.html HTTP/1.0" 200 190 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 102 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /coopr.html HTTP/1.0" 200 121 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 111 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 145 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /cdap.html HTTP/1.0" 200 190 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 102 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /coopr.html HTTP/1.0" 200 121 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 111 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 145 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
 
 We can now start the MapReduce program to process the events that were
 ingested::
 
-  $ cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
+  $ cdap cli start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
 The MapReduce program will take a couple of moments to process.
 
 We can then start the ``TopClientsService`` and then query the processed
 results::
 
-  $ cdap-cli.sh start service LogAnalyticsApp.TopClientsService
+  $ cdap cli start service LogAnalyticsApp.TopClientsService
 
   $ curl -w'\n' http://localhost:10000/v3/namespaces/default/apps/LogAnalyticsApp/services/TopClientsService/methods/results
 
