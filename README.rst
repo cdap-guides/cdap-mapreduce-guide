@@ -6,24 +6,24 @@ Batch Data Processing with CDAP
 most popular paradigm for processing large amounts of data in a reliable
 and fault-tolerant manner. In this guide, you will learn how to batch
 process data using MapReduce in the `Cask Data Application Platform
-(CDAP) <http://cdap.io>`__.
+(CDAP) <https://cask.co>`__.
 
 What You Will Build
 ===================
 
-This guide will take you through building a 
-`CDAP application <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/applications.html>`__
+This guide will take you through building a
+`CDAP application <https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/applications.html>`__
 that uses ingested Apache access log events to compute the top 10 client IPs in a
 specific time-range and query the results. You will:
 
 - Build a
-  `MapReduce program <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html>`__
+  `MapReduce program <https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/mapreduce-jobs.html>`__
   to process Apache access log events;
 - Use a
-  `Dataset <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/datasets/index.html>`__
+  `Dataset <https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/datasets/index.html>`__
   to persist results of the MapReduce program; and
 - Build a
-  `Service <http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/services.html>`__
+  `Service <https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/services.html>`__
   to serve the results via HTTP.
 
 What You Will Need
@@ -31,7 +31,7 @@ What You Will Need
 
 - `JDK 7 or 8 <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`__
 - `Apache Maven 3.1+ <http://maven.apache.org/>`__
-- `CDAP SDK <http://docs.cdap.io/cdap/current/en/developers-manual/getting-started/standalone/index.html>`__
+- `CDAP Local Sandbox <https://docs.cask.co/cdap/current/en/developers-manual/getting-started/local-sandbox/index.html>`__
 
 Let’s Build It!
 ===============
@@ -39,7 +39,7 @@ Let’s Build It!
 The following sections will guide you through building an application from scratch. If you
 are interested in deploying and running the application right away, you can clone its
 source code from this GitHub repository. In that case, feel free to skip the next two
-sections and jump right to the 
+sections and jump right to the
 `Build and Run Application <#build-and-run-application>`__ section.
 
 Application Design
@@ -77,8 +77,8 @@ standard Maven project structure for all of the source code files::
   ./src/main/java/co/cdap/guides/TopNClientsReducer.java
 
 The CDAP application is identified by the ``LogAnalyticsApp`` class. This
-class extends an `AbstractApplication 
-<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`__,
+class extends an `AbstractApplication
+<https://docs.cask.co/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/app/AbstractApplication.html>`__,
 and overrides the ``configure()`` method to define all of the application components:
 
 .. code:: java
@@ -104,8 +104,8 @@ and overrides the ``configure()`` method to define all of the application compon
     }
   }
 
-The ``LogAnalytics`` application defines a new `Stream 
-<http://docs.cdap.io/cdap/current/en/developers-manual/building-blocks/streams.html>`__
+The ``LogAnalytics`` application defines a new `Stream
+<https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/streams.html>`__
 where Apache access logs are ingested.
 
 The log events can be ingested into the CDAP stream. Once the data is
@@ -123,8 +123,8 @@ the Dataset.
 
 Let's take a closer look at the MapReduce program.
 
-The ``TopClientsMapReduce`` extends an `AbstractMapReduce 
-<http://docs.cdap.io/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
+The ``TopClientsMapReduce`` extends an `AbstractMapReduce
+<https://docs.cask.co/cdap/current/en/reference-manual/javadocs/co/cask/cdap/api/mapreduce/AbstractMapReduce.html>`__
 class and overrides the ``configure()`` and ``initialize()`` methods:
 
 -   ``configure()`` method configures a MapReduce, setting the program
@@ -229,7 +229,7 @@ specified in the ``configure()`` method of the MapReduce program.
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
-      // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as  
+      // Write topN results in reduce output. Since the "topN" (ObjectStore) Dataset is used as
       // output the entries will be written to the Dataset without any additional effort.
       List<ClientCount> topNResults = Lists.newArrayList();
       while (priorityQueue.size() != 0) {
@@ -283,42 +283,42 @@ The ``LogAnalyticsApp`` can be built and packaged using the Apache Maven command
 
   $ mvn clean package
 
-Note that the remaining commands assume that the ``cdap-cli.sh`` script is
+Note that the remaining commands assume that the ``cdap.sh`` script is
 available on your PATH. If this is not the case, please add it::
 
   $ export PATH=$PATH:<CDAP home>/bin
 
-If you haven't already started a standalone CDAP installation, start it with the command::
+If you haven't already started a CDAP Local Sandbox installation, start it with the command::
 
-  $ cdap.sh start
+  $ cdap sandbox start
 
-We can then deploy the application to the standalone CDAP installation::
+We can then deploy the application to the CDAP Local Sandbox installation::
 
-  $ cdap-cli.sh load artifact target/cdap-mapreduce-guide-<version>.jar
-  $ cdap-cli.sh create app LogAnalyticsApp cdap-mapreduce-guide <version> user
+  $ cdap cli load artifact target/cdap-mapreduce-guide-<version>.jar
+  $ cdap cli create app LogAnalyticsApp cdap-mapreduce-guide <version> user
 
 Next, we will send some sample Apache access log event into the stream
 for processing::
 
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /cdap.html HTTP/1.0" 200 190 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 102 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /coopr.html HTTP/1.0" 200 121 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 111 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
-  $ cdap-cli.sh send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 145 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /cdap.html HTTP/1.0" 200 190 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 102 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.185 - - [23/Sep/2014:11:45:38 -0400] "GET /coopr.html HTTP/1.0" 200 121 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 111 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
+  $ cdap cli send stream logEvents \'255.255.255.182 - - [23/Sep/2014:11:45:38 -0400] "GET /tigon.html HTTP/1.0" 200 145 "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"\'
 
 We can now start the MapReduce program to process the events that were
 ingested::
 
-  $ cdap-cli.sh start mapreduce LogAnalyticsApp.TopClientsMapReduce
+  $ cdap cli start mapreduce LogAnalyticsApp.TopClientsMapReduce
 
 The MapReduce program will take a couple of moments to process.
 
 We can then start the ``TopClientsService`` and then query the processed
 results::
 
-  $ cdap-cli.sh start service LogAnalyticsApp.TopClientsService
+  $ cdap cli start service LogAnalyticsApp.TopClientsService
 
-  $ curl -w'\n' http://localhost:10000/v3/namespaces/default/apps/LogAnalyticsApp/services/TopClientsService/methods/results
+  $ curl -w'\n' http://localhost:11015/v3/namespaces/default/apps/LogAnalyticsApp/services/TopClientsService/methods/results
 
 Example output::
 
@@ -338,8 +338,8 @@ Extend This Example
 Now that you have the basics of MapReduce programs down, you can extend
 this example by:
 
-- Writing a `workflow 
-  <http://docs.cask.co/cdap/current/en/developers-manual/building-blocks/workflows.html>`__
+- Writing a `workflow
+  <https://docs.cask.co/cdap/current/en/developers-manual/building-blocks/workflows.html>`__
   to schedule this MapReduce every hour and process the previous hour's data
 - Store the results in a Timeseries data to analyze trends
 
@@ -351,7 +351,7 @@ Have a question? Discuss at the `CDAP User Mailing List <https://groups.google.c
 License
 =======
 
-Copyright © 2014-2015 Cask Data, Inc.
+Copyright © 2014-2017 Cask Data, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
 not use this file except in compliance with the License. You may obtain
